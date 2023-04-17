@@ -1,4 +1,4 @@
-package it.smartdpi.utenteservice.dto;
+package it.smartdpi.utenteservice.dto.ruoloDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RuoloForTenantDto {
+public class RuoloDtoForTenant {
 
     private String nome;
 
