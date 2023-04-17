@@ -25,6 +25,7 @@ public class UtenteController {
         return ResponseEntity.ok(utenteDto);
     }
 
+    // Penso proprio andrà rimosso... era solo per prove
     @GetMapping("/tenant/{id}")
     public ResponseEntity<List<DpiDto>> getDpisByTenantOfUtente (@PathVariable("id") Long idTenant) {
         List<DpiDto> dpisDto = this.utenteService.getDpisByTenantOfUtente(idTenant);
