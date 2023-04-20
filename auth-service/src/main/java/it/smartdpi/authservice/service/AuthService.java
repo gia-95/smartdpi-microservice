@@ -46,31 +46,12 @@ public class AuthService {
     }
 
     public LoginDto loginInConsole(AuthRequest authRequest) {
-        // 'Usercredential' sarebbe Utente, ma nelle configurazioni di Auth è stato chiamato così....
-        UserCredential utente = fetchUtenteAndVerifyPassword(authRequest);
-
-        RuoloDto ruoloDto;
-        TenantDto tenantDto;
-        try {
-            ruoloDto = this.restTemplate.getForObject(Constans.UTENTE_SERVICE_URL + "/utente/ruolo/" + utente.getId(), RuoloDto.class);
-            tenantDto = this.restTemplate.getForObject(Constans.UTENTE_SERVICE_URL + "/utente/tenant/" + utente.getId(), TenantDto.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Errore nella chiamata a UTENTE-SERVICE...");
-        }
-
+        UserCredential utente = fetchUtenteAndVerifyPassword(authRequest); // 'Usercredential' sarebbe Utente, ma nelle configurazioni di Auth è stato chiamato così....
+        RuoloDto ruoloDto = this.fetchRuoloUtente(utente);
+        TenantDto tenantDto = this.fetchTenantUtente(utente);
         String token = this.generateToken(utente.getUsername(), tenantDto.getId());
 
-        LoginDto loginDto = new LoginDto(
-                utente.getId(),
-                utente.getNome(),
-                utente.getCognome(),
-                utente.getUsername(),
-                utente.getEmail(),
-                utente.getNumeroTelefono(),
-                ruoloDto,
-                tenantDto,
-                token);
-
+        LoginDto loginDto = this.setCampiLoginDto(utente, ruoloDto, tenantDto, token);
         return loginDto;
     }
 
@@ -86,4 +67,49 @@ public class AuthService {
         }
         return utente;
     }
+
+    private RuoloDto fetchRuoloUtente(UserCredential utente) {
+        RuoloDto ruoloDto;
+        try {
+            ruoloDto = this.restTemplate.getForObject(Constans.UTENTE_SERVICE_URL + "/utente/ruolo/" + utente.getId(), RuoloDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nella chiamata a UTENTE-SERVICE...");
+        }
+
+        if (ruoloDto == null) {
+            throw new RuntimeException("Ruolo utente non trovato...");
+        }
+        return ruoloDto;
+    }
+
+    private TenantDto fetchTenantUtente(UserCredential utente) {
+        TenantDto tenantDto;
+        try {
+            tenantDto = this.restTemplate.getForObject(Constans.UTENTE_SERVICE_URL + "/utente/tenant/" + utente.getId(), TenantDto.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nella chiamata a UTENTE-SERVICE...");
+        }
+
+        if (tenantDto == null) {
+            throw new RuntimeException("Tenant utente non trovato...");
+        }
+        return tenantDto;
+    }
+
+    private LoginDto setCampiLoginDto(UserCredential utente, RuoloDto ruoloDto, TenantDto tenantDto, String token) {
+        LoginDto loginDto = new LoginDto(
+                utente.getId(),
+                utente.getNome(),
+                utente.getCognome(),
+                utente.getUsername(),
+                utente.getEmail(),
+                utente.getNumeroTelefono(),
+                ruoloDto,
+                tenantDto,
+                token);
+
+        return loginDto;
+    }
+
+
 }
