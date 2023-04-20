@@ -1,6 +1,7 @@
 package it.smartdpi.authservice.controller;
 
 import it.smartdpi.authservice.dto.AuthRequest;
+import it.smartdpi.authservice.dto.LoginDto;
 import it.smartdpi.authservice.entity.UserCredential;
 import it.smartdpi.authservice.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class AuthController {
         // (metodo @Override loadUserByUsername in classe CustomuserDetailService)
         Authentication authenticate = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authenticate.isAuthenticated()) {
-            return this.authService.generateToken(authRequest.getUsername());
+            return this.authService.generateToken(authRequest.getUsername(),null);
         } else {
             throw new RuntimeException("Invalid authentication...");
         }
@@ -42,6 +43,11 @@ public class AuthController {
     public String validateToken(@RequestParam("Token") String token) {
         this.authService.validateToken(token);
         return "Token is valid!";
+    }
+
+    @PostMapping("/login")
+    public LoginDto loginInConsole (@RequestBody AuthRequest authRequest) {
+        return this.authService.loginInConsole(authRequest);
     }
 
 

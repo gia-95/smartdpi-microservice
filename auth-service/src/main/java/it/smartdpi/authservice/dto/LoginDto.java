@@ -1,34 +1,30 @@
-package it.smartdpi.authservice.entity;
+package it.smartdpi.authservice.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
-import javax.persistence.*;
+import javax.persistence.Column;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "utenti")
-public class UserCredential {
+public class LoginDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
     private String cognome;
     private String username;
     private String email;
-    private String password;
     @Column(name = "numero_telefono")
     private String numeroTelefono;
 
+    private RuoloDto ruolo;
 
+    private TenantDto tenant;
+
+    private String token;
 }

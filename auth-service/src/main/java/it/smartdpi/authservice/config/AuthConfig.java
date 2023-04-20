@@ -1,5 +1,6 @@
 package it.smartdpi.authservice.config;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
@@ -22,12 +24,18 @@ public class AuthConfig {
         return new  CustomUserDetailService();
     }
 
+    @LoadBalanced
+    @Bean
+    public RestTemplate template () {
+        return new RestTemplate();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
 //                .requestMatchers("/auth/register", "/auth/token", "/auth/validate").permitAll()
-                .antMatchers("/auth/register", "/auth/token", "/auth/validate").permitAll()
+                .antMatchers("/auth/register", "/auth/token", "/auth/validate", "/auth/login").permitAll()
                 .antMatchers("/**").denyAll()
                 .and()
                 .build();

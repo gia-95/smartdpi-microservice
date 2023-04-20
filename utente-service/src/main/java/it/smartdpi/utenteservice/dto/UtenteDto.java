@@ -1,6 +1,6 @@
 package it.smartdpi.utenteservice.dto;
 
-import it.smartdpi.utenteservice.dto.ruoloDto.RuoloDtoForTenant;
+import it.smartdpi.utenteservice.dto.ruoloDto.RuoloDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +24,6 @@ public class UtenteDto {
 
     private String tenant;
 
-    private RuoloDtoForTenant ruolo;
+    private RuoloDto ruolo;
 
 }

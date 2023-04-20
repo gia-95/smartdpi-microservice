@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RuoloDtoForTenant {
+public class RuoloDto {
+
+    private Long id;
 
     private String nome;
 
